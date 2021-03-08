@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.jslhrd.mapper.BoardMapper">
+	<select id="boardCount" resultType="int">
+		select count(*) from tbl_board
+	</select>
+	
+	<select id="boardList" resultType="com.jslhrd.domain.BoardVO">
+		select * from tbl_board order by idx desc
+	</select>
+	
+	<select id="boardSelect" resultType="com.jslhrd.domain.BoardVO">
+		select * from tbl_board where idx = #{idx}
+	</select>
+	
+	<insert id="boardWrite">
+		insert into tbl_board(idx,name,email,pass,subject,contents) values(tbl_board_seq_idx.nextval,#{name},#{email},#{pass},#{subject},#{contents})
+	</insert>
+	
+	<update id="boardUpdate">
+		update tbl_board set subject=#{subject},contents=#{contents} where idx=#{idx} and pass = #{pass}
+	</update>
+	
+	<delete id="boardDelete">
+		delete from tbl_board where idx = #{idx} and pass = #{pass}
+	</delete>
+	
+	<update id="boardHits">
+		update tbl_board set readcnt = readcnt + 1 where idx = #{idx}
+	</update>
+</mapper>
