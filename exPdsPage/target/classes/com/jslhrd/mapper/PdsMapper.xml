@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.jslhrd.mapper.PdsMapper">
+	<!-- 전체 게시물 카운트 -->
+	<select id="pdsCount" resultType="int">
+		select count(*) from tbl_pds
+	</select>
+  	
+	<!-- 전체 목록 검색  (검색처리 페이지처리 없음) -->
+<!--  	
+	<select id="pdsList" resultType="com.jslhrd.domain.PdsVO">
+		select * from tbl_pds order by idx desc
+	</select>
+ -->
+ 
+ 	<!-- 전체 목록 검색 페이지 처리 추가 -->
+	 <select id="pdsList" resultType="com.jslhrd.domain.PdsVO">
+		<![CDATA[
+			select X.* from (select rownum as rnum, A.* from
+				(select * from tbl_pds order by idx desc) A
+					where rownum <= #{endpage}) X
+						where X.rnum >= #{startpage}
+		]]>
+	</select>
+	
+	<select id="pdsSelect" resultType="com.jslhrd.domain.PdsVO">
+		select * from tbl_pds where idx = #{idx}
+	</select>
+	<update id="pdsHits">
+		update tbl_pds set readcnt = readcnt + 1 where idx = #{idx}
+	</update>
+	<!-- 등록 -->
+	<insert id="pdsWrite">
+		insert into tbl_pds(idx,name,email,pass,subject,contents,filename) values(tbl_pds_seq_idx.nextval,#{name},#{email},#{pass},#{subject},#{contents},#{filename})
+	</insert>
+	
+	<update id="pdsModify">
+		update tbl_pds set subject=#{subject},contents=#{contents},filename=#{filename},email=#{email} where idx=#{idx} and pass = #{pass}
+	</update>
+	
+	<delete id="pdsDelete">
+		delete from tbl_pds where idx = #{idx} and pass = #{pass}
+	</delete>
+
+
+
+
+
+</mapper>
